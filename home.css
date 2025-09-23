@@ -1,0 +1,39 @@
+/* Header container */
+.site-header {
+  display: flex;
+  justify-content: space-between; /* brand left, logout right */
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #2c3e50;
+  color: white;
+}
+
+/* Brand */
+.site-header .brand h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+.site-header .brand p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Logout button container */
+.site-header .header-actions {
+  margin-left: auto; /* push to right */
+}
+
+/* Logout button */
+.site-header .header-actions .btn {
+  background-color: white;
+  color: #1a73e8;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.site-header .header-actions .btn:hover {
+  background-color: #e0e0e0;
+}

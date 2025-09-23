@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WorkNama - Library Record Management</title>
+  <link rel="stylesheet" href="style.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="logo">📚</span>
+      <div>
+        <h1>WorkNama</h1>
+        <p class="tagline">Easy &amp; Smart Management</p>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <div class="container">
+       <!-- ✅ Login Container -->
+      <div class="card auth-card login-container">
+        <h2>Login to WorkNama</h2>
+        <p class="muted">Enter your credentials to continue</p>
+
+        <!-- Direct Login Form -->
+        <form id="loginForm" class="login-form">
+          <label>Email
+            <input type="email" id="loginEmail" required />
+          </label>
+          <label>Password
+            <input type="password" id="loginPassword" required />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Login</button>
+          </div>
+          <p class="forgot"><a href="#" id="forgotPasswordLink">Forgot Password?</a></p>
+        </form>
+
+        <hr style="margin:20px 0;">
+
+        <!-- Registration Button -->
+        <p class="muted">Don't have an account?</p>
+        <button id="openRegisterBtn" class="btn outline">Click here for New Registration</button>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- Registration Modal -->
+  <div id="modalOverlay" class="overlay hidden" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="regTitle">
+      <div class="modal-header">
+        <h3 id="regTitle">Register Organisation</h3>
+        <button id="closeModal" class="icon-btn" title="Close">&times;</button>
+      </div>
+
+      <form id="regForm" class="reg-form">
+        <fieldset>
+          <legend>Organisation Details</legend>
+          <label>Organisation Name
+            <input type="text" id="orgName" required />
+          </label>
+
+          <label>Admin / Owner Name
+            <input type="text" id="adminName" required />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Address</legend>
+
+          <label>Country
+            <div class="select-search">
+              <input type="text" id="countrySearch" placeholder="Search country... (default India)" />
+              <div id="countryList" class="options"></div>
+            </div>
+          </label>
+
+          <label>State / Province
+            <select id="stateSelect"></select>
+          </label>
+
+          <label>District
+            <select id="districtSelect"></select>
+          </label>
+
+          <label>City / Town / Village
+            <input type="text" id="city" />
+          </label>
+
+          <label>Pincode / ZIP
+            <input type="text" id="pincode" inputmode="numeric" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Contact</legend>
+
+          <label>Mobile Number
+            <div class="phone-row">
+              <input type="text" id="countryCode" readonly class="country-code" />
+              <input type="tel" id="mobile" placeholder="10 digit number" inputmode="numeric" maxlength="10" />
+              <button type="button" id="sendMobileOtp" class="btn tiny">Send OTP</button>
+            </div>
+            <div class="otp-row hidden" id="mobileOtpRow">
+              <input type="text" id="mobileOtp" maxlength="6" placeholder="Enter OTP" />
+              <button type="button" id="verifyMobileOtp" class="btn tiny">Verify</button>
+              <span id="mobileOtpInfo" class="muted"></span>
+            </div>
+          </label>
+
+          <label>Email
+            <div class="email-row">
+              <input type="email" id="email" placeholder="your@email.com" />
+              <button type="button" id="sendEmailOtp" class="btn tiny">Send OTP</button>
+            </div>
+            <div class="otp-row hidden" id="emailOtpRow">
+              <input type="text" id="emailOtp" maxlength="6" placeholder="Enter OTP" />
+              <button type="button" id="verifyEmailOtp" class="btn tiny">Verify</button>
+              <span id="emailOtpInfo" class="muted"></span>
+            </div>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Security</legend>
+          <label>Create Password
+            <input type="password" id="password" minlength="6" required />
+          </label>
+          <label>Confirm Password
+            <input type="password" id="confirmPassword" minlength="6" required />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Operations & Subscription</legend>
+
+          <label>Organisation operates in number of shifts
+            <select id="shiftCount">
+              <option value="1">1 shift</option>
+              <option value="2">2 shifts</option>
+              <option value="3">3 shifts</option>
+            </select>
+          </label>
+
+          <div id="shiftTimes">
+            <!-- dynamic timing inputs here -->
+          </div>
+
+          <label>Subscription Duration
+            <select id="subscription">
+              <option value="1">1 month</option>
+              <option value="3">3 months</option>
+              <option value="6">6 months</option>
+              <option value="12">12 months</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" id="saveBtn" class="btn primary">Save & Register</button>
+          <button type="button" id="cancelReg" class="btn outline">Back to Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confOverlay" class="overlay hidden" aria-hidden="true">
+    <div class="modal small" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3>Registration Completed</h3>
+      </div>
+      <div class="modal-body">
+        <p id="confMsg"></p>
+        <p class="muted">Please save these credentials. Password will be shown only this time.</p>
+      </div>
+      <div class="form-actions">
+        <button id="confBackLogin" class="btn primary">Back to Login</button>
+      </div>
+    </div>
+  </div>
+<!-- Forgot Password Modal -->
+<div id="forgotOverlay" class="overlay hidden" aria-hidden="true">
+  <div class="modal small" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h3>Forgot Password</h3>
+      <button id="closeForgotModal" class="icon-btn">&times;</button>
+    </div>
+    <form id="forgotForm" class="forgot-form">
+      <label>Email
+        <div class="email-row">
+          <input type="email" id="forgotEmail" placeholder="your@email.com" required />
+          <button type="button" id="sendForgotOtp" class="btn tiny">Send OTP</button>
+        </div>
+      </label>
+
+      <div class="otp-row hidden" id="forgotOtpRow">
+        <input type="text" id="forgotOtp" maxlength="6" placeholder="Enter OTP" />
+        <button type="button" id="verifyForgotOtp" class="btn tiny">Verify</button>
+        <span id="forgotOtpInfo" class="muted"></span>
+      </div>
+
+      <div class="hidden" id="forgotNewPassRow">
+        <label>New Password
+          <input type="password" id="forgotNewPassword" minlength="6" required />
+        </label>
+        <label>Confirm Password
+          <input type="password" id="forgotConfirmPassword" minlength="6" required />
+        </label>
+        <button type="submit" class="btn primary">Update Password</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <script src="script.js"> </script>
+</body>
+</html>
