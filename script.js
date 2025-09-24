@@ -368,7 +368,7 @@ function handleLogin(e) {
     // Store login info with SAME KEY used in home.html
     localStorage.setItem('worknamaUser', JSON.stringify(match))
     // Redirect to home page
-    window.location.href = "../dashboard/dashboard.html";
+    window.location.href = "./dashboard/dashboard.html";
   } else {
     alert("Invalid email or password.")
   }

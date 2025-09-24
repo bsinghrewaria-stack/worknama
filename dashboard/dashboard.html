@@ -8,43 +8,31 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="brand">
-      <span class="logo">📚</span>
-      <div>
-        <h1>WorkNama </h1>
-        <p class="tagline">Easy &amp; Smart Management</p>
-      </div>
+    <div class="container">
+      <h1>📚 WorkNama</h1>
+      <p class="tagline">Easy & Smart Management</p>
     </div>
-    <div class="header-actions">
-      <span id="welcomeHeader" class="welcome-msg"></span>
-      <button id="logoutBtn" class="btn outline">Logout</button>
+    <div class="header-right">
+      <span id="orgNameDisplay"></span>
+      <span id="clock"></span>
+      <button id="logoutBtn">Logout</button>
     </div>
   </header>
 
+  <!-- Main Dashboard -->
   <main>
-    <div class="container">
-      <div class="card">
-        <button id="orgDetailsBtn" class="btn primary">View Organisation Details</button>
+    <div class="dashboard-container">
+      <h2>Welcome to Dashboard</h2>
+      <div class="dashboard-actions">
+        <button class="card-btn" id="orgDetailsBtn">🏢 Organisation Details</button>
+        <button class="card-btn" id="addNotificationBtn">🔔 Add Notification</button>
+        <button class="card-btn" id="seatStatusBtn">💺 Seat Status</button>
+        <button class="card-btn" id="addMemberBtn">👥 Add Member</button>
+        <button class="card-btn" id="feeStatusBtn">💰 Fee Status</button>
       </div>
     </div>
   </main>
-
-  <!-- Organisation Details Modal -->
-  <div id="orgModal" class="overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Organisation Details</h3>
-        <button class="icon-btn" id="closeOrgModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <table class="details-table" id="orgDetailsTable"></table>
-      </div>
-      <div class="form-actions">
-        <button class="btn" id="closeOrgBtn">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="dashboard.js"></script>
+  
 </body>
+<script src="dashboard.js"></script>
 </html>
