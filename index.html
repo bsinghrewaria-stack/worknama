@@ -6,6 +6,9 @@
   <title>WorkNama - Library Record Management</title>
   <link rel="stylesheet" href="style.css" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2c3e50">
+
 </head>
 <body>
   <header class="site-header">
@@ -217,6 +220,15 @@
   </div>
 </div>
 
-  <script src="script.js"> </script>
+  
 </body>
+<script src="script.js"> </script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("Service Worker registered"))
+      .catch(err => console.error("SW registration failed:", err));
+  }
+</script>
+
 </html>

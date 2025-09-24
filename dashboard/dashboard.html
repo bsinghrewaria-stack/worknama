@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WorkNama - Dashboard</title>
   <link rel="stylesheet" href="dashboard.css" />
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2c3e50">
+
 </head>
 <body>
   <header class="site-header">
@@ -35,4 +38,11 @@
   
 </body>
 <script src="dashboard.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("Service Worker registered"))
+      .catch(err => console.error("SW registration failed:", err));
+  }
+</script>
 </html>
