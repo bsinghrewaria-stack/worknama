@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WorkNama - Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="logo">📚</span>
+      <div>
+        <h1>WorkNama </h1>
+        <p class="tagline">Easy &amp; Smart Management</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="welcomeHeader" class="welcome-msg"></span>
+      <button id="logoutBtn" class="btn outline">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="card">
+        <button id="orgDetailsBtn" class="btn primary">View Organisation Details</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Organisation Details Modal -->
+  <div id="orgModal" class="overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Organisation Details</h3>
+        <button class="icon-btn" id="closeOrgModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <table class="details-table" id="orgDetailsTable"></table>
+      </div>
+      <div class="form-actions">
+        <button class="btn" id="closeOrgBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

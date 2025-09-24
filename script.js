@@ -273,11 +273,9 @@ function handleVerifyEmailOtp(){
   }
 }
 
-// ----- Registration Submit Handler -----
 function handleRegister(e){
   e.preventDefault();
-  // perform validations (similar to your existing code)
-  // Check that mobileVerified && emailVerified before save etc.
+
   if(!mobileVerified){
     alert('Please verify mobile.');
     return;
@@ -286,13 +284,29 @@ function handleRegister(e){
     alert('Please verify email.');
     return;
   }
-  // ... rest of saving logic ...
 
-  // for demo, show confirmation
   const email = emailInput.value.trim();
   const password = el('password').value;
   const orgName = el('orgName').value.trim();
 
+  // 1. Get existing orgs from localStorage
+  let orgs = JSON.parse(localStorage.getItem("orgs") || "[]");
+
+  // 2. Create new org object
+  const newOrg = {
+    orgName: orgName,
+    credentials: {
+      email: email,
+      password: password
+    },
+    createdAt: new Date().toISOString()
+  };
+
+  // 3. Save into localStorage
+  orgs.push(newOrg);
+  localStorage.setItem("orgs", JSON.stringify(orgs));
+
+  // 4. Show confirmation
   confMsg.innerHTML = `<strong>Registered:</strong> ${orgName} <br/>
     <strong>Email:</strong> ${email} <br/>
     <strong>Password (one-time):</strong> <code>${password}</code>`;
@@ -300,6 +314,7 @@ function handleRegister(e){
   confOverlay.classList.remove('hidden');
   closeModalFn();
 }
+
 
 function openModal(){
   modalOverlay.classList.remove('hidden');
@@ -353,7 +368,7 @@ function handleLogin(e) {
     // Store login info with SAME KEY used in home.html
     localStorage.setItem('worknamaUser', JSON.stringify(match))
     // Redirect to home page
-    window.location.href = "home.html";
+    window.location.href = "../dashboard/dashboard.html";
   } else {
     alert("Invalid email or password.")
   }
