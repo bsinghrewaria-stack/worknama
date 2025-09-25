@@ -154,3 +154,91 @@ main {
     justify-content: space-between;
   }
 }
+/* ------------------- Organisation Details Modal ------------------- */
+#orgDetailsModal.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+#orgDetailsModal.hidden {
+  display: none;
+}
+
+#orgDetailsModal .modal {
+  background: #fff;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  overflow: hidden;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+#orgDetailsModal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #1976d2, #2196f3);
+  color: #fff;
+  padding: 15px 20px;
+}
+
+#orgDetailsModal .modal-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+#orgDetailsModal .icon-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#orgDetailsModal .icon-btn:hover {
+  transform: rotate(90deg);
+}
+
+#orgDetailsModal .modal-body {
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  line-height: 1.5;
+}
+
+#orgDetailsModal .modal-body p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+#orgDetailsModal .modal-body b {
+  color: #1976d2;
+}
+
+#orgDetailsModal .modal-body hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 15px 0;
+}
+
+@media (max-width: 480px) {
+  #orgDetailsModal .modal {
+    width: 95%;
+  }
+}
