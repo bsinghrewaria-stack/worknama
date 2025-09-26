@@ -100,3 +100,7 @@ document
   .addEventListener("click", () => {
     document.getElementById("orgDetailsModal").classList.add("hidden");
   });
+// Open Member Page
+document.getElementById("addMemberBtn").addEventListener("click", () => {
+  window.location.href = "member.html"; // same folder me hone par direct chalega
+});
