@@ -44,6 +44,155 @@
     <div id="orgDetailsContent" class="modal-body"></div>
   </div>
 </div>
+<!-- ================= Add Member Modal ================= -->
+<div id="addMemberModal" class="overlay hidden">
+  <div class="modal large">
+    <div class="modal-header">
+      <h3>Add Member - Seat Allocation</h3>
+      <button id="closeAddMember" class="icon-btn">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Seat Grid -->
+      <div id="seatContainer" class="seat-grid"></div>
+
+      <!-- Seat Actions -->
+      <div class="seat-actions">
+        <button id="addSeatsBtn" class="btn primary">+ Add 10 Seats</button>
+        <button id="removeSeatsBtn" class="btn danger">- Remove 10 Seats</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= Admission Form Modal ================= -->
+<div id="admissionFormModal" class="overlay hidden">
+  <div class="modal medium">
+    <div class="modal-header">
+      <button id="closeAdmissionForm" class="icon-btn back-btn">←</button>
+      <h3>New Admission Form</h3>
+      <button id="cancelAdmissionForm" class="icon-btn">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="admissionForm">
+        <!-- Personal Details -->
+        <div class="form-section">
+          <h4>👤 Personal Details</h4>
+          <div class="form-grid">
+            <div>
+              <label>Name</label>
+              <input type="text" id="memberName" required>
+            </div>
+            <div>
+              <label>Mobile No.</label>
+              <input type="tel" id="memberMobile" required>
+            </div>
+            <div>
+              <label>Aadhaar No.</label>
+              <input type="text" id="memberAadhaar" required>
+            </div>
+            <div>
+              <label>Date of Birth</label>
+              <input type="date" id="memberDob" required>
+            </div>
+            <div class="full-width">
+              <label>Address</label>
+              <textarea id="memberAddress" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shift Selection -->
+        <div class="form-section">
+          <h4>🕒 Shift</h4>
+          <select id="memberShift" required>
+            <option value="">-- Select Shift --</option>
+            <option value="full">Full Day</option>
+            <option value="morning">Morning</option>
+            <option value="evening">Evening</option>
+            <option value="night">Night</option>
+          </select>
+        </div>
+
+        <!-- Dates -->
+        <div class="form-section">
+          <h4>📅 Dates</h4>
+          <div class="form-grid">
+            <div>
+              <label>Joining Date</label>
+              <input type="date" id="joiningDate" required>
+            </div>
+            <div>
+              <label>Exit Date</label>
+              <input type="date" id="exitDate">
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="form-section">
+          <h4>📎 Documents</h4>
+          <div class="form-grid">
+            <div>
+              <label>Aadhaar Photo</label>
+              <input type="file" id="aadhaarPhoto" accept="image/*" capture="environment">
+            </div>
+            <div>
+              <label>Profile Picture</label>
+              <input type="file" id="profilePhoto" accept="image/*" capture="user">
+            </div>
+          </div>
+        </div>
+
+        <!-- Fee Section -->
+        <div class="form-section">
+          <h4>💰 Fee Payment</h4>
+          <div class="form-grid">
+            <div>
+              <label>Total Fee</label>
+              <input type="number" id="totalFee" required>
+            </div>
+            <div>
+              <label>Discount</label>
+              <input type="number" id="discountFee" value="0">
+            </div>
+            <div>
+              <label>Paid Amount</label>
+              <input type="number" id="paidAmount" required>
+            </div>
+            <div>
+              <label>Balance</label>
+              <input type="number" id="balanceAmount" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-section">
+          <h4>💳 Payment Method</h4>
+          <select id="paymentMethod" required>
+            <option value="">-- Select Method --</option>
+            <option value="cash">Cash</option>
+            <option value="upi">UPI</option>
+          </select>
+
+          <!-- QR Placeholder (for org specific UPI QR) -->
+          <div id="upiQrSection" class="hidden">
+            <p>Scan the QR Code to pay:</p>
+            <img id="upiQrImage" src="" alt="UPI QR" style="max-width:200px;">
+          </div>
+        </div>
+
+        <!-- Form Buttons -->
+        <div class="form-actions">
+          <button type="button" class="btn danger" id="cancelFormBtn">Cancel</button>
+          <button type="submit" class="btn primary">Save Details</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 
   </main>
   

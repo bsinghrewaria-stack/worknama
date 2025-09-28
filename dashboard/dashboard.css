@@ -242,3 +242,244 @@ main {
     width: 95%;
   }
 }
+/* ------------------- Add Member Modal (Overlay Popup) ------------------- */
+#addMemberModal.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+#addMemberModal.hidden {
+  display: none;
+}
+
+#addMemberModal .modal.large {
+  background: #fff;
+  width: 90%;
+  max-width: 800px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  overflow: hidden;
+  animation: slideDown 0.4s ease;
+}
+
+#addMemberModal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #1976d2, #2196f3);
+  color: #fff;
+  padding: 15px 20px;
+}
+
+#addMemberModal .modal-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+#addMemberModal .icon-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#addMemberModal .icon-btn:hover {
+  transform: rotate(90deg);
+}
+
+#addMemberModal .modal-body {
+  padding: 20px;
+}
+
+/* ---------- Seat Grid ---------- */
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+  justify-items: center;
+}
+
+.seat {
+  width: 60px;
+  height: 60px;
+  background: #ecf0f1;
+  border: 2px solid var(--accent);
+  border-radius: 50%; /* गोल बॉक्स */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--primary);
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.seat:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Seat Selection */
+.seat.selected {
+  background: var(--success);
+  color: #fff;
+  border-color: var(--success);
+}
+
+.seat-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn.primary:hover {
+  background: #2980b9;
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn.danger:hover {
+  background: #c0392b;
+}
+
+/* ------------------- Admission Form Modal ------------------- */
+#admissionFormModal.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* higher than Add Member Modal */
+}
+
+#admissionFormModal.hidden {
+  display: none;
+}
+
+#admissionFormModal .modal.medium {
+  background: #fff;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  overflow-y: auto;
+  max-height: 90vh;
+  animation: slideDown 0.4s ease;
+}
+
+#admissionFormModal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #1976d2, #2196f3);
+  color: #fff;
+  padding: 15px 20px;
+}
+
+#admissionFormModal .modal-header h3 {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+#admissionFormModal .icon-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#admissionFormModal .icon-btn.back-btn {
+  font-size: 1.3rem;
+}
+
+#admissionFormModal .modal-body {
+  padding: 20px;
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-section h4 {
+  margin-bottom: 10px;
+  color: var(--primary);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.form-grid input,
+.form-grid select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#upiQrSection {
+  margin-top: 10px;
+  text-align: center;
+}
