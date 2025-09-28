@@ -616,8 +616,31 @@ textarea {
     font-size: 14px;
   }
 
-  #admissionFormModal .modal-body,
-  #addMemberModal .modal-body {
+  /* Admission Form Modal Scroll */
+#admissionFormModal .modal.medium {
+  max-height: 90vh;       /* viewport height का 90% */
+  overflow-y: auto;       /* vertical scroll enable */
+  -webkit-overflow-scrolling: touch; /* smooth scrolling iOS */
+  padding: 20px;
+}
+
+/* Optional: modal body fix */
+#admissionFormModal .modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Small screens adjustments */
+@media (max-width: 480px) {
+  #admissionFormModal .modal.medium {
+    width: 95%;
+    max-width: 95%;
     padding: 15px;
   }
+
+  .form-grid {
+    grid-template-columns: 1fr; /* fields stack vertically */
+  }
 }
+
