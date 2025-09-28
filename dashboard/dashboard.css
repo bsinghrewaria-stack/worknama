@@ -378,7 +378,8 @@ main {
   background: #c0392b;
 }
 
-/* ------------------- Admission Form Modal ------------------- */
+/* ------------------- Add Member Modal ------------------- */
+#addMemberModal.overlay,
 #admissionFormModal.overlay {
   position: fixed;
   top: 0;
@@ -389,17 +390,20 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000; /* higher than Add Member Modal */
+  z-index: 1000;
 }
 
+#addMemberModal.hidden,
 #admissionFormModal.hidden {
   display: none;
 }
 
+/* Modal Style */
+#addMemberModal .modal.large,
 #admissionFormModal .modal.medium {
   background: #fff;
   width: 90%;
-  max-width: 700px;
+  max-width: 800px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   overflow-y: auto;
@@ -407,6 +411,13 @@ main {
   animation: slideDown 0.4s ease;
 }
 
+@keyframes slideDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Modal Header */
+#addMemberModal .modal-header,
 #admissionFormModal .modal-header {
   display: flex;
   justify-content: space-between;
@@ -416,29 +427,109 @@ main {
   padding: 15px 20px;
 }
 
+#addMemberModal .modal-header h3,
 #admissionFormModal .modal-header h3 {
   margin: 0;
   flex: 1;
   text-align: center;
 }
 
-#admissionFormModal .icon-btn {
+.icon-btn {
   background: transparent;
   border: none;
   color: #fff;
   font-size: 1.5rem;
   cursor: pointer;
+  transition: transform 0.2s;
 }
 
-#admissionFormModal .icon-btn.back-btn {
-  font-size: 1.3rem;
+.icon-btn:hover {
+  transform: rotate(90deg);
 }
 
+/* Modal Body */
+#addMemberModal .modal-body,
 #admissionFormModal .modal-body {
   padding: 20px;
 }
 
-/* Form Sections */
+/* ---------- Seat Grid ---------- */
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+  justify-items: center;
+}
+
+.seat {
+  width: 60px;
+  height: 60px;
+  background: #ecf0f1;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--primary);
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.seat:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.seat.selected {
+  background: var(--success);
+  color: #fff;
+  border-color: var(--success);
+}
+
+/* Seat Actions Buttons */
+.seat-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn.primary:hover {
+  background: #2980b9;
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn.danger:hover {
+  background: #c0392b;
+}
+
+/* ------------------- Admission Form ------------------- */
 .form-section {
   margin-bottom: 20px;
 }
@@ -479,7 +570,54 @@ textarea {
   margin-top: 20px;
 }
 
+/* UPI QR Section */
 #upiQrSection {
   margin-top: 10px;
   text-align: center;
+}
+
+/* ------------------- Responsive Mobile ------------------- */
+@media (max-width: 768px) {
+  .seat-grid {
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  }
+  .seat {
+    width: 50px;
+    height: 50px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  #addMemberModal .modal.large,
+  #admissionFormModal .modal.medium {
+    width: 95%;
+    max-width: 95%;
+    padding: 15px;
+  }
+
+  .seat-grid {
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 10px;
+  }
+
+  .seat {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .btn.primary, .btn.danger {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  #admissionFormModal .modal-body,
+  #addMemberModal .modal-body {
+    padding: 15px;
+  }
 }
