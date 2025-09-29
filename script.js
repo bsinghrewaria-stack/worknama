@@ -12,251 +12,476 @@ const COUNTRIES = [
   {code: 'BD', name: 'Bangladesh', dial: '+880'},
   {code: 'NP', name: 'Nepal', dial: '+977'},
   {code: 'LK', name: 'Sri Lanka', dial: '+94'},
-  {code: 'PK', name: 'Pakistan', dial: '+92'}
+  {code: 'PK', name: 'Pakistan', dial: '+92'},
+  // add more if needed
 ];
 
-// ----- Region / States Data -----
 const REGION_DATA = {
-  'IN': { states: { 'Maharashtra': ['Mumbai','Pune','Nagpur'], 'Karnataka':['Bengaluru','Mysore'], 'Delhi':['Central Delhi','South Delhi'] } },
-  'US': { states: { 'California': ['Los Angeles','San Diego'], 'Texas':['Houston','Dallas'] } },
-  'GB': { states: { 'England':['London'], 'Scotland':['Glasgow'] } }
+  'IN': {
+    states: {
+      'Maharashtra': ['Mumbai', 'Pune', 'Nagpur'],
+      'Karnataka': ['Bengaluru', 'Mysore', 'Mangalore'],
+      'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Varanasi'],
+      'Delhi': ['Central Delhi', 'South Delhi', 'North Delhi'],
+      'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai']
+    }
+  },
+  'US': { states: { 'California': ['Los Angeles','San Diego'], 'Texas': ['Houston','Dallas'] } },
+  'GB': { states: { 'England': ['Greater London'], 'Scotland': ['Glasgow'] } },
+  // fallback structure for other countries will be simple empty
 };
 
 // ----- Helpers -----
-const el = id => document.getElementById(id);
-const createOpt = (text,val)=> { const o = document.createElement('option'); o.value = val||text; o.textContent=text; return o; };
+function el(id) {
+  return document.getElementById(id);
+}
+function createOpt(text, val) {
+  const o = document.createElement('option');
+  o.value = val !== undefined ? val : text;
+  o.textContent = text;
+  return o;
+}
 
 // ----- UI Elements -----
-let openRegisterBtn = el('openRegisterBtn'),
-    modalOverlay = el('modalOverlay'),
-    closeModal = el('closeModal'),
-    cancelReg = el('cancelReg'),
-    countrySearch = el('countrySearch'),
-    countryList = el('countryList'),
-    countryCode = el('countryCode'),
-    stateSelect = el('stateSelect'),
-    districtSelect = el('districtSelect'),
-    shiftCount = el('shiftCount'),
-    shiftTimes = el('shiftTimes'),
-    sendMobileOtp = el('sendMobileOtp'),
-    mobileOtpRow = el('mobileOtpRow'),
-    mobileOtp = el('mobileOtp'),
-    verifyMobileOtp = el('verifyMobileOtp'),
-    mobileOtpInfo = el('mobileOtpInfo'),
-    sendEmailOtp = el('sendEmailOtp'),
-    emailOtpRow = el('emailOtpRow'),
-    emailOtp = el('emailOtp'),
-    verifyEmailOtp = el('verifyEmailOtp'),
-    emailOtpInfo = el('emailOtpInfo'),
-    emailInput = el('email'),
-    mobileInput = el('mobile'),
-    saveBtn = el('saveBtn'),
-    regForm = el('regForm'),
-    confOverlay = el('confOverlay'),
-    confMsg = el('confMsg'),
-    confBackLogin = el('confBackLogin');
+let openRegisterBtn = el('openRegisterBtn');
+let modalOverlay = el('modalOverlay');
+let closeModal = el('closeModal');
+let cancelReg = el('cancelReg');
+let countrySearch = el('countrySearch');
+let countryList = el('countryList');
+let countryCode = el('countryCode');
+let stateSelect = el('stateSelect');
+let districtSelect = el('districtSelect');
+let shiftCount = el('shiftCount');
+let shiftTimes = el('shiftTimes');
+let sendMobileOtp = el('sendMobileOtp');
+let mobileOtpRow = el('mobileOtpRow');
+let mobileOtp = el('mobileOtp');
+let verifyMobileOtp = el('verifyMobileOtp');
+let mobileOtpInfo = el('mobileOtpInfo');
+let sendEmailOtp = el('sendEmailOtp');
+let emailOtpRow = el('emailOtpRow');
+let emailOtp = el('emailOtp');
+let verifyEmailOtp = el('verifyEmailOtp');
+let emailOtpInfo = el('emailOtpInfo');
+let emailInput = el('email');
+let mobileInput = el('mobile');
+let saveBtn = el('saveBtn');
+let regForm = el('regForm');
 
-// ----- State -----
-let selectedCountry = COUNTRIES.find(c=>c.code==='IN');
-let mobileOtpSent=null, emailOtpSent=null, mobileVerified=false, emailVerified=false;
+let confOverlay = el('confOverlay');
+let confMsg = el('confMsg');
+let confBackLogin = el('confBackLogin');
 
-// ----- Init -----
+// ----- State Variables -----
+let selectedCountry = COUNTRIES.find(c=>c.code==='IN'); // default India
+let mobileOtpSent = null;
+let emailOtpSent = null;
+let mobileVerified = false;
+let emailVerified = false;
+
+// ----- Initialization -----
 function init(){
   renderCountryOptions();
-  countrySearch.value=selectedCountry.name;
-  countryCode.value=selectedCountry.dial;
+  countrySearch.value = selectedCountry.name;
+  countryCode.value = selectedCountry.dial;
   populateStatesForCountry(selectedCountry.code);
 
-  openRegisterBtn.addEventListener('click',openModal);
-  closeModal.addEventListener('click',closeModalFn);
-  cancelReg.addEventListener('click',backToLogin);
+  openRegisterBtn.addEventListener('click', openModal);
+  closeModal.addEventListener('click', closeModalFn);
+  cancelReg.addEventListener('click', backToLogin);
 
-  countrySearch.addEventListener('input',filterCountries);
-  countrySearch.addEventListener('focus',()=>countryList.style.display='block');
-  document.addEventListener('click',(e)=>{if(!e.target.closest('.select-search')) countryList.style.display='none';});
+  countrySearch.addEventListener('input', filterCountries);
+  countrySearch.addEventListener('focus', ()=>{ countryList.style.display='block'; });
+  document.addEventListener('click', (e)=>{ 
+    if (!e.target.closest('.select-search')) countryList.style.display='none';
+  });
 
-  shiftCount.addEventListener('change',renderShiftTimeInputs);
-  sendMobileOtp.addEventListener('click',handleSendMobileOtp);
-  verifyMobileOtp.addEventListener('click',handleVerifyMobileOtp);
-  sendEmailOtp.addEventListener('click',handleSendEmailOtp);
-  verifyEmailOtp.addEventListener('click',handleVerifyEmailOtp);
+  shiftCount.addEventListener('change', renderShiftTimeInputs);
 
-  regForm.addEventListener('submit',handleRegister);
+  sendMobileOtp.addEventListener('click', handleSendMobileOtp);
+  verifyMobileOtp.addEventListener('click', handleVerifyMobileOtp);
 
-  confBackLogin.addEventListener('click',()=>{
+  sendEmailOtp.addEventListener('click', handleSendEmailOtp);
+  verifyEmailOtp.addEventListener('click', handleVerifyEmailOtp);
+
+  regForm.addEventListener('submit', handleRegister);
+
+  confBackLogin.addEventListener('click', ()=>{
     confOverlay.classList.add('hidden');
+    alert('Proceed to Login.'); 
   });
 
   renderShiftTimeInputs();
-
-  // Login form listener
-  const loginForm = el('loginForm');
-  if(loginForm) loginForm.addEventListener('submit',handleLogin);
-
-  // Forgot password listeners
-  initForgotPassword();
 }
 
-// ----- Country -----
+// ----- Country Selector UI -----
 function renderCountryOptions(){
-  countryList.innerHTML='';
+  countryList.innerHTML = '';
   COUNTRIES.forEach(c=>{
-    const div=document.createElement('div');
-    div.className='opt';
-    div.textContent=`${c.name} (${c.dial})`;
-    div.dataset.code=c.code;
-    div.dataset.dial=c.dial;
-    div.addEventListener('click',()=>{
-      selectedCountry=c;
-      countrySearch.value=c.name;
-      countryCode.value=c.dial;
-      countryList.style.display='none';
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.textContent = `${c.name} (${c.dial})`;
+    div.dataset.code = c.code;
+    div.dataset.dial = c.dial;
+    div.addEventListener('click', ()=>{
+      selectedCountry = c;
+      countrySearch.value = c.name;
+      countryCode.value = c.dial;
+      countryList.style.display = 'none';
+      // Repopulate state / district
       populateStatesForCountry(c.code);
     });
     countryList.appendChild(div);
   });
 }
+
 function filterCountries(){
-  const q=countrySearch.value.trim().toLowerCase();
-  let any=false;
-  countryList.querySelectorAll('.opt').forEach(o=>{
-    const show=o.textContent.toLowerCase().includes(q);
-    o.style.display=show?'block':'none';
-    if(show) any=true;
+  const q = countrySearch.value.trim().toLowerCase();
+  const opts = countryList.querySelectorAll('.opt');
+  let anyVisible = false;
+  opts.forEach(o=>{
+    const text = o.textContent.toLowerCase();
+    if(text.includes(q)){
+      o.style.display = 'block';
+      anyVisible = true;
+    } else {
+      o.style.display = 'none';
+    }
   });
-  countryList.style.display=any?'block':'none';
+  countryList.style.display = anyVisible ? 'block' : 'none';
 }
+
+// ----- States / Districts -----
 function populateStatesForCountry(code){
-  stateSelect.innerHTML=''; districtSelect.innerHTML=''; stateSelect.disabled=true; districtSelect.disabled=true;
-  const region=REGION_DATA[code];
+  // Reset
+  stateSelect.innerHTML = '';
+  districtSelect.innerHTML = '';
+  stateSelect.disabled = true;
+  districtSelect.disabled = true;
+
+  const region = REGION_DATA[code];
   if(region && region.states){
-    stateSelect.appendChild(createOpt('-- Select state --',''));
-    Object.keys(region.states).forEach(s=>stateSelect.appendChild(createOpt(s,s)));
-    stateSelect.disabled=false;
-    stateSelect.onchange=onStateChange;
-  }else{
-    stateSelect.appendChild(createOpt('State not in list','')); stateSelect.disabled=true;
-  }
-}
-function onStateChange(e){
-  const st=e.target.value; districtSelect.innerHTML=''; districtSelect.disabled=true;
-  if(!st) return;
-  const region=REGION_DATA[selectedCountry.code];
-  if(region && region.states[st]){
-    districtSelect.appendChild(createOpt('-- Select district --',''));
-    region.states[st].forEach(d=>districtSelect.appendChild(createOpt(d,d)));
-    districtSelect.disabled=false;
+    const states = Object.keys(region.states);
+    stateSelect.appendChild(createOpt('-- Select state --', ''));
+    states.forEach(s => stateSelect.appendChild(createOpt(s, s)));
+    stateSelect.disabled = false;
+    // ensure old listener removed to avoid duplicates
+    stateSelect.onchange = onStateChange;
+  } else {
+    // fallback: allow manual entry via text input
+    // (for simplicity skip fallback or implement similarly)
+    stateSelect.appendChild(createOpt('State not in list', ''));
+    stateSelect.disabled = true;
   }
 }
 
-// ----- Shifts -----
+function onStateChange(e){
+  const st = e.target.value;
+  districtSelect.innerHTML = '';
+  districtSelect.disabled = true;
+  if(!st) return;
+  const region = REGION_DATA[selectedCountry.code];
+  if(region && region.states[st]){
+    const districts = region.states[st];
+    districtSelect.appendChild(createOpt('-- Select district --',''));
+    districts.forEach(d => districtSelect.appendChild(createOpt(d, d)));
+    districtSelect.disabled = false;
+  }
+}
+
+// ----- Shift Time Inputs -----
 function renderShiftTimeInputs(){
-  const count=Number(shiftCount.value)||1;
-  shiftTimes.innerHTML='';
-  for(let i=1;i<=count;i++){
-    const div=document.createElement('div');
-    div.className='shift-block';
-    div.innerHTML=`<label>Shift ${i} Timing
-      <div style="display:flex; gap:8px; align-items:center;">
-        <input type="time" class="shift-start" id="shift${i}Start" required/>
-        <input type="time" class="shift-end" id="shift${i}End" required/>
-      </div></label>`;
+  const count = Number(shiftCount.value) || 1;
+  shiftTimes.innerHTML = '';
+  for(let i = 1; i <= count; i++){
+    const div = document.createElement('div');
+    div.className = 'shift-block';
+    div.innerHTML = `
+      <label>Shift ${i} Timing
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input type="time" class="shift-start" id="shift${i}Start" required />
+          <input type="time" class="shift-end" id="shift${i}End" required />
+        </div>
+      </label>
+    `;
     shiftTimes.appendChild(div);
   }
-  if(count===1){
-    const s=el('shift1Start'), e=el('shift1End');
-    if(s) s.value='08:00'; if(e) e.value='20:00';
+  if(count === 1){
+    const s = el('shift1Start'), e = el('shift1End');
+    if(s) s.value = '08:00';
+    if(e) e.value = '20:00';
   }
 }
 
-// ----- OTP -----
-const randomOtp=()=>Math.floor(100000+Math.random()*900000).toString();
-function handleSendMobileOtp(){
-  const m=mobileInput.value.trim();
-  if(!/^\d{10}$/.test(m)){alert('Enter valid 10 digit mobile'); return;}
-  mobileOtpSent=randomOtp(); mobileOtpRow.classList.remove('hidden'); mobileOtpInfo.textContent=`Demo OTP: ${mobileOtpSent}`; mobileVerified=false;
+// ----- OTP Helpers -----
+function randomOtp(){
+  return Math.floor(100000 + Math.random()*900000).toString();
 }
-function handleVerifyMobileOtp(){ const otp=mobileOtp.value.trim(); if(!mobileOtpSent){alert('Send OTP first'); return;} if(otp===mobileOtpSent){mobileVerified=true; mobileOtpInfo.textContent='Mobile verified ✅'; mobileOtpRow.classList.add('hidden');} else mobileOtpInfo.textContent='Wrong OTP'; }
-function handleSendEmailOtp(){ const e=emailInput.value.trim(); if(!/^\S+@\S+\.\S+$/.test(e)){alert('Valid email'); return;} emailOtpSent=randomOtp(); emailOtpRow.classList.remove('hidden'); emailOtpInfo.textContent=`Demo OTP: ${emailOtpSent}`; emailVerified=false;}
-function handleVerifyEmailOtp(){ const otp=emailOtp.value.trim(); if(!emailOtpSent){alert('Send OTP first'); return;} if(otp===emailOtpSent){emailVerified=true; emailOtpInfo.textContent='Email verified ✅'; emailOtpRow.classList.add('hidden');} else emailOtpInfo.textContent='Wrong OTP';}
 
-// ----- Register -----
+function handleSendMobileOtp(){
+  const mobile = mobileInput.value.trim();
+  if(!/^\d{10}$/.test(mobile)){
+    alert('Enter valid 10 digit mobile number (without country code).');
+    return;
+  }
+  mobileOtpSent = randomOtp();
+  mobileOtpRow.classList.remove('hidden');
+  mobileOtpInfo.textContent = `Demo OTP: ${mobileOtpSent}`; // For testing
+  mobileVerified = false;
+}
+
+function handleVerifyMobileOtp(){
+  const otp = mobileOtp.value.trim();
+  if(!mobileOtpSent){
+    alert('Please send OTP first.');
+    return;
+  }
+  if(otp === mobileOtpSent){
+    mobileVerified = true;
+    mobileOtpInfo.textContent = 'Mobile verified ✅';
+    mobileOtpRow.classList.add('hidden');
+  } else {
+    mobileOtpInfo.textContent = 'Wrong OTP. Try again.';
+  }
+}
+
+function handleSendEmailOtp(){
+  const email = emailInput.value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(email)){
+    alert('Enter valid email address.');
+    return;
+  }
+  emailOtpSent = randomOtp();
+  emailOtpRow.classList.remove('hidden');
+  emailOtpInfo.textContent = `Demo OTP: ${emailOtpSent}`; // For testing
+  emailVerified = false;
+}
+
+function handleVerifyEmailOtp(){
+  const otp = emailOtp.value.trim();
+  if(!emailOtpSent){
+    alert('Please send email OTP first.');
+    return;
+  }
+  if(otp === emailOtpSent){
+    emailVerified = true;
+    emailOtpInfo.textContent = 'Email verified ✅';
+    emailOtpRow.classList.add('hidden');
+  } else {
+    emailOtpInfo.textContent = 'Wrong OTP. Try again.';
+  }
+}
+
 function handleRegister(e){
   e.preventDefault();
-  if(!mobileVerified){alert('Verify mobile'); return;}
-  if(!emailVerified){alert('Verify email'); return;}
-  const email=emailInput.value.trim(), password=el('password').value, orgName=el('orgName').value.trim();
-  let orgs=JSON.parse(localStorage.getItem('orgs')||'[]');
-  const newOrg={ orgName, credentials:{email,password}, createdAt:new Date().toISOString() };
-  orgs.push(newOrg); localStorage.setItem('orgs',JSON.stringify(orgs));
-  confMsg.innerHTML=`<strong>Registered:</strong> ${orgName} <br/><strong>Email:</strong> ${email} <br/><strong>Password:</strong> <code>${password}</code>`;
-  confOverlay.classList.remove('hidden'); closeModalFn();
+
+  if(!mobileVerified){
+    alert('Please verify mobile.');
+    return;
+  }
+  if(!emailVerified){
+    alert('Please verify email.');
+    return;
+  }
+
+  const email = emailInput.value.trim();
+  const password = el('password').value;
+  const orgName = el('orgName').value.trim();
+
+  // 1. Get existing orgs from localStorage
+  let orgs = JSON.parse(localStorage.getItem("orgs") || "[]");
+
+  // 2. Create new org object
+  const newOrg = {
+    orgName: orgName,
+    credentials: {
+      email: email,
+      password: password
+    },
+    createdAt: new Date().toISOString()
+  };
+
+  // 3. Save into localStorage
+  orgs.push(newOrg);
+  localStorage.setItem("orgs", JSON.stringify(orgs));
+
+  // 4. Show confirmation
+  confMsg.innerHTML = `<strong>Registered:</strong> ${orgName} <br/>
+    <strong>Email:</strong> ${email} <br/>
+    <strong>Password (one-time):</strong> <code>${password}</code>`;
+
+  confOverlay.classList.remove('hidden');
+  closeModalFn();
 }
 
-// ----- Modal -----
-function openModal(){ modalOverlay.classList.remove('hidden'); document.body.classList.add('modal-open'); regForm.reset(); mobileOtpRow.classList.add('hidden'); emailOtpRow.classList.add('hidden'); mobileOtpInfo.textContent=''; emailOtpInfo.textContent=''; mobileOtpSent=null; emailOtpSent=null; mobileVerified=false; emailVerified=false; countrySearch.value=selectedCountry.name; countryCode.value=selectedCountry.dial; populateStatesForCountry(selectedCountry.code); renderShiftTimeInputs();}
-function closeModalFn(){ modalOverlay.classList.add('hidden'); document.body.classList.remove('modal-open');}
-function backToLogin(){ closeModalFn(); }
 
-// ----- Login -----
-function handleLogin(e){
+function openModal(){
+  modalOverlay.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  // reset form
+  regForm.reset();
+  mobileOtpRow.classList.add('hidden');
+  emailOtpRow.classList.add('hidden');
+  mobileOtpInfo.textContent = '';
+  emailOtpInfo.textContent = '';
+  mobileOtpSent = null;
+  emailOtpSent = null;
+  mobileVerified = false;
+  emailVerified = false;
+  countrySearch.value = selectedCountry.name;
+  countryCode.value = selectedCountry.dial;
+  populateStatesForCountry(selectedCountry.code);
+  renderShiftTimeInputs();
+}
+
+function closeModalFn(){
+  modalOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+}
+
+function backToLogin(){
+  closeModalFn();
+  // you can also clear form or redirect
+}
+
+// Call init when DOM loaded
+window.addEventListener('DOMContentLoaded', init);
+const loginForm = document.getElementById('loginForm')
+
+loginForm.addEventListener('submit', handleLogin)
+
+function handleLogin(e) {
+  e.preventDefault()
+  const email = document.getElementById('loginEmail').value.trim()
+  const password = document.getElementById('loginPassword').value
+
+  if (!email || !password) {
+    alert("Please enter both email and password.")
+    return
+  }
+
+  const orgs = JSON.parse(localStorage.getItem('orgs') || '[]')
+  const match = orgs.find(org => org.credentials.email === email && org.credentials.password === password)
+
+  if (match) {
+    // Store login info with SAME KEY used in home.html
+    localStorage.setItem('worknamaUser', JSON.stringify(match))
+    // Redirect to home page
+    window.location.href = "./dashboard/dashboard.html";
+  } else {
+    alert("Invalid email or password.")
+  }
+}
+// ----- Forgot Password Flow -----
+const forgotLink = document.getElementById("forgotPasswordLink");
+const forgotOverlay = document.getElementById("forgotOverlay");
+const closeForgotModal = document.getElementById("closeForgotModal");
+const forgotForm = document.getElementById("forgotForm");
+const sendForgotOtp = document.getElementById("sendForgotOtp");
+const forgotOtpRow = document.getElementById("forgotOtpRow");
+const forgotOtp = document.getElementById("forgotOtp");
+const verifyForgotOtp = document.getElementById("verifyForgotOtp");
+const forgotOtpInfo = document.getElementById("forgotOtpInfo");
+const forgotNewPassRow = document.getElementById("forgotNewPassRow");
+const forgotEmailInput = document.getElementById("forgotEmail");
+
+let forgotOtpSent = null;
+let forgotEmailVerified = false;
+
+// Open modal
+forgotLink.addEventListener("click", (e) => {
   e.preventDefault();
-  const email=el('loginEmail').value.trim(), password=el('loginPassword').value;
-  if(!email||!password){alert('Enter email and password'); return;}
-  const orgs=JSON.parse(localStorage.getItem('orgs')||'[]');
-  const match=orgs.find(o=>o.credentials.email===email && o.credentials.password===password);
-  if(match){
-    const userData={orgName:match.orgName, credentials:match.credentials, createdAt:match.createdAt};
-    localStorage.setItem('worknamaUser',JSON.stringify(userData));
-    window.location.href="./dashboard/dashboard.html";
-  } else alert('Invalid email/password');
+  forgotOverlay.classList.remove("hidden");
+});
+
+// Close modal
+closeForgotModal.addEventListener("click", () => {
+  forgotOverlay.classList.add("hidden");
+  resetForgotForm();
+});
+
+function resetForgotForm() {
+  forgotForm.reset();
+  forgotOtpRow.classList.add("hidden");
+  forgotNewPassRow.classList.add("hidden");
+  forgotOtpInfo.textContent = "";
+  forgotOtpSent = null;
+  forgotEmailVerified = false;
 }
 
-// ----- Forgot Password -----
-function initForgotPassword(){
-  const forgotLink=el("forgotPasswordLink"),
-        forgotOverlay=el("forgotOverlay"),
-        closeForgotModal=el("closeForgotModal"),
-        forgotForm=el("forgotForm"),
-        sendForgotOtp=el("sendForgotOtp"),
-        forgotOtpRow=el("forgotOtpRow"),
-        forgotOtp=el("forgotOtp"),
-        verifyForgotOtp=el("verifyForgotOtp"),
-        forgotOtpInfo=el("forgotOtpInfo"),
-        forgotNewPassRow=el("forgotNewPassRow"),
-        forgotEmailInput=el("forgotEmail");
-  let forgotOtpSent=null, forgotEmailVerified=false;
+// Send OTP
+sendForgotOtp.addEventListener("click", () => {
+  const email = forgotEmailInput.value.trim();
+  if (!/^\S+@\S+\.\S+$/.test(email)) {
+    alert("Enter a valid email address.");
+    return;
+  }
 
-  forgotLink.addEventListener("click",e=>{e.preventDefault(); forgotOverlay.classList.remove("hidden");});
-  closeForgotModal.addEventListener("click",()=>{forgotOverlay.classList.add("hidden"); resetForgotForm();});
-  function resetForgotForm(){ forgotForm.reset(); forgotOtpRow.classList.add("hidden"); forgotNewPassRow.classList.add("hidden"); forgotOtpInfo.textContent=""; forgotOtpSent=null; forgotEmailVerified=false;}
+  // check if email exists in localStorage
+  const orgs = JSON.parse(localStorage.getItem("orgs") || "[]");
+  const user = orgs.find((org) => org.credentials.email === email);
 
-  sendForgotOtp.addEventListener("click",()=>{
-    const email=forgotEmailInput.value.trim();
-    if(!/^\S+@\S+\.\S+$/.test(email)){alert("Valid email"); return;}
-    const orgs=JSON.parse(localStorage.getItem("orgs")||"[]");
-    const user=orgs.find(o=>o.credentials.email===email);
-    if(!user){alert("No account found"); return;}
-    forgotOtpSent=Math.floor(100000+Math.random()*900000).toString();
-    forgotOtpRow.classList.remove("hidden"); forgotOtpInfo.textContent=`Demo OTP: ${forgotOtpSent}`; forgotEmailVerified=false;
-  });
+  if (!user) {
+    alert("No account found with this email.");
+    return;
+  }
 
-  verifyForgotOtp.addEventListener("click",()=>{
-    if(!forgotOtpSent){alert("Send OTP first"); return;}
-    if(forgotOtp.value.trim()===forgotOtpSent){forgotEmailVerified=true; forgotOtpInfo.textContent="Email verified ✅"; forgotOtpRow.classList.add("hidden"); forgotNewPassRow.classList.remove("hidden");} else forgotOtpInfo.textContent="Wrong OTP";
-  });
+  forgotOtpSent = Math.floor(100000 + Math.random() * 900000).toString();
+  forgotOtpRow.classList.remove("hidden");
+  forgotOtpInfo.textContent = `Demo OTP: ${forgotOtpSent}`; // 🔥 testing purpose only
+  forgotEmailVerified = false;
+});
 
-  forgotForm.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    if(!forgotEmailVerified){alert("Verify email"); return;}
-    const email=forgotEmailInput.value.trim(), newPass=el("forgotNewPassword").value, confirmPass=el("forgotConfirmPassword").value;
-    if(newPass.length<6){alert("Password >=6"); return;}
-    if(newPass!==confirmPass){alert("Passwords do not match"); return;}
-    const orgs=JSON.parse(localStorage.getItem("orgs")||"[]");
-    const user=orgs.find(o=>o.credentials.email===email);
-    if(user){user.credentials.password=newPass; localStorage.setItem("orgs",JSON.stringify(orgs)); alert("Password updated"); forgotOverlay.classList.add("hidden"); resetForgotForm();}
-  });
-}
+// Verify OTP
+verifyForgotOtp.addEventListener("click", () => {
+  if (!forgotOtpSent) {
+    alert("Please send OTP first.");
+    return;
+  }
+  if (forgotOtp.value.trim() === forgotOtpSent) {
+    forgotEmailVerified = true;
+    forgotOtpInfo.textContent = "Email verified ✅";
+    forgotOtpRow.classList.add("hidden");
+    forgotNewPassRow.classList.remove("hidden");
+  } else {
+    forgotOtpInfo.textContent = "Wrong OTP. Try again.";
+  }
+});
 
-// ----- DOMContentLoaded -----
-window.addEventListener('DOMContentLoaded',init);
+// Update password
+forgotForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  if (!forgotEmailVerified) {
+    alert("Please verify your email first.");
+    return;
+  }
+
+  const email = forgotEmailInput.value.trim();
+  const newPass = document.getElementById("forgotNewPassword").value;
+  const confirmPass = document.getElementById("forgotConfirmPassword").value;
+
+  if (newPass.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+  if (newPass !== confirmPass) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  const orgs = JSON.parse(localStorage.getItem("orgs") || "[]");
+  const user = orgs.find((org) => org.credentials.email === email);
+
+  if (user) {
+    user.credentials.password = newPass;
+    localStorage.setItem("orgs", JSON.stringify(orgs));
+    alert("Password updated successfully!");
+    forgotOverlay.classList.add("hidden");
+    resetForgotForm();
+  }
+});
+
+
+
