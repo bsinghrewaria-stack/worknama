@@ -627,7 +627,6 @@ textarea {
 }
 
 @media (max-width: 480px) {
-  /* पहला हिस्सा */
   #admissionFormModal .modal.medium {
     max-height: 90vh;
     overflow-y: auto;
@@ -637,8 +636,14 @@ textarea {
     max-width: 95%;
   }
 
+  #admissionFormModal .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .form-grid {
-    grid-template-columns: 1fr; /* fields stack vertically */
+    grid-template-columns: 1fr;
   }
 }
 
