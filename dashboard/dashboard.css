@@ -472,12 +472,16 @@ main {
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;         /* थोड़ा छोटा ताकि कटे नहीं */
   color: var(--primary);
+  text-align: center;      /* multiline में center */
+  line-height: 1.2;        /* text height adjust */
   cursor: pointer;
   transition: 0.2s;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  overflow: hidden;        /* extra text न निकले */
 }
+
 
 .seat:hover {
   background: var(--accent);
